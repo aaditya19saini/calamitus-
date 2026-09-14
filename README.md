@@ -21,7 +21,7 @@ You don't need to know Rust or programming to install this. Pick whichever optio
 If you're on Windows 10/11, you already have `winget` built in. Open PowerShell and run:
 
 ```powershell
-winget install AadityaSaini.Launch
+winget install Calamitus.Launch
 ```
 
 **Option B: one-line install script**
