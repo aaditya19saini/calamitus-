@@ -51,6 +51,17 @@ fn name_of(p: &Path) -> String {
     p.file_stem().unwrap_or_default().to_string_lossy().to_lowercase()
 }
 
+// every substring is a subsequence, so this also catches abbreviations
+// like "vs code" -> "visual studio code" that plain substring matching misses.
+fn is_subsequence(needle: &str, haystack: &str) -> bool {
+    let mut hay = haystack.chars();
+    needle.chars().all(|c| hay.any(|h| h == c))
+}
+
+fn compact(s: &str) -> String {
+    s.chars().filter(|c| !c.is_whitespace()).collect()
+}
+
 fn aliases_path() -> Option<PathBuf> {
     Some(PathBuf::from(env::var("APPDATA").ok()?).join(r"calamitus\aliases.txt"))
 }
@@ -108,12 +119,19 @@ fn prompt_choice<'a>(header: &str, candidates: &[&'a PathBuf]) -> &'a PathBuf {
 }
 
 fn main() {
-    let query = env::args().skip(1).collect::<Vec<_>>().join(" ");
-    if query.is_empty() {
+    let args: Vec<String> = env::args().skip(1).collect();
+    if args.is_empty() {
         eprintln!("usage: launch <app name>");
         std::process::exit(1);
     }
-    let query = query.to_lowercase();
+
+    // single-word queries that are already runnable via PATH (git, code, notepad, ...)
+    // get launched directly, skipping Start Menu matching entirely.
+    if args.len() == 1 && Command::new(&args[0]).spawn().is_ok() {
+        return;
+    }
+
+    let query = args.join(" ").to_lowercase();
 
     if let Some((_, target)) = load_aliases().into_iter().find(|(name, _)| *name == query) {
         launch(&PathBuf::from(target));
@@ -134,7 +152,11 @@ fn main() {
         return;
     }
 
-    let substring_matches: Vec<&PathBuf> = shortcuts.iter().filter(|p| name_of(p).contains(&query)).collect();
+    let query_compact = compact(&query);
+    let substring_matches: Vec<&PathBuf> = shortcuts
+        .iter()
+        .filter(|p| is_subsequence(&query_compact, &compact(&name_of(p))))
+        .collect();
     let chosen = match substring_matches.as_slice() {
         [only] => only,
         [] => {
