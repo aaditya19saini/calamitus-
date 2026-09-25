@@ -48,11 +48,20 @@ launch vs code
 
 You don't need the exact full name. If you type something that matches more than one app, it'll list the matches so you can be more specific. If nothing matches, it'll suggest the closest names it can find.
 
+### Command-line Options & Flags
+
+`launch` supports several flags to manage apps and display information:
+
+- `launch --help` or `launch -h` — Display help information and options.
+- `launch --version` or `launch -v` — Display version information.
+- `launch --list` or `launch -l` — List all indexed Start Menu shortcuts (`.lnk`, `.url`) and configured aliases.
+- `launch --aliases` or `launch -a` — Show the file path to `aliases.txt` and open it in your default text editor.
+
 ## Apps it can't find on its own
 
-`calamitus` works by scanning your Start Menu shortcuts. Apps installed from the Microsoft Store (like WhatsApp) usually don't have one, so `launch` can't find them by itself.
+`calamitus` works by scanning your Start Menu shortcuts (`.lnk` files) and web shortcuts (`.url` files). Apps installed from the Microsoft Store (like WhatsApp) usually don't have standard shortcut files, so `launch` can't find them by itself.
 
-To fix that, point `launch` at the app yourself. The first time you run `launch`, it creates a file at `%APPDATA%\calamitus\aliases.txt` with instructions inside. Add a line like:
+To fix that, point `launch` at the app yourself. Running `launch --aliases` (or running `launch` for the first time) creates a file at `%APPDATA%\calamitus\aliases.txt`. Add a line like:
 
 ```
 whatsapp=shell:AppsFolder\5319275A.WhatsAppDesktop_cv1g1gvanyjgm!App
@@ -64,7 +73,7 @@ To find the right target for a Store app, run this in PowerShell and look for yo
 Get-StartApps | findstr -i whatsapp
 ```
 
-You can also point an alias at any `.exe` or `.lnk` path if you'd rather use that instead of the app's Start Menu name.
+You can also point an alias at any `.exe`, `.lnk`, or `.url` path if you'd rather use that instead of the app's Start Menu name.
 
 ## Frequently asked questions
 
@@ -75,7 +84,7 @@ No. It only runs when you type `launch` — there's nothing sitting in the backg
 Yes. It only looks at the shortcuts already in your Start Menu and opens them the same way Windows Explorer would. It doesn't touch anything else on your system.
 
 **What if it can't find my app?**
-It searches your Start Menu shortcuts, so if an app doesn't show up when you search the Start Menu either, `launch` won't find it. Some apps (especially ones installed from a store rather than an installer) don't always add a shortcut there — see [Apps it can't find on its own](#apps-it-cant-find-on-its-own) for how to fix that.
+It searches your Start Menu shortcuts (`.lnk` and `.url`), so if an app doesn't show up when you search the Start Menu either, `launch` won't find it. Some apps (especially ones installed from a store rather than an installer) don't always add a shortcut there — see [Apps it can't find on its own](#apps-it-cant-find-on-its-own) for how to fix that.
 
 **Do I need to reinstall it every time I restart my PC?**
 No. Once it's installed, it stays installed, just like any other program.
