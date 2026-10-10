@@ -16,7 +16,15 @@ If you're comfortable in a terminal, typing is usually faster than reaching for 
 
 You don't need to know Rust or programming to install this. Pick whichever option is easiest for you.
 
-**Option A: one-line install script (works right now)**
+**Option A: winget**
+
+```powershell
+winget install Calamitus.Launch
+```
+
+Works on Windows 10/11 out of the box.
+
+**Option B: one-line install script**
 
 ```powershell
 irm https://raw.githubusercontent.com/aaditya19saini/calamitus-/master/install.ps1 | iex
@@ -25,16 +33,6 @@ irm https://raw.githubusercontent.com/aaditya19saini/calamitus-/master/install.p
 Copy that, paste it into PowerShell, hit Enter. It downloads the program and makes the `launch` command available everywhere.
 
 If PowerShell won't let it run, close and reopen your terminal — that's usually all it takes.
-
-**Option B: winget (pending approval, not live yet)**
-
-`calamitus` has a package submitted to the winget repository, waiting on review. Once it's approved, anyone on Windows 10/11 will be able to run:
-
-```powershell
-winget install Calamitus.Launch
-```
-
-Until then, use Option A.
 
 ## How to use it
 
