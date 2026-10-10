@@ -44,25 +44,29 @@ launch spotify
 launch vs code
 ```
 
-You don't need the exact full name. If you type something that matches more than one app, it'll list the matches so you can be more specific. If nothing matches, it'll suggest the closest names it can find.
+You don't need the exact full name. If you type something that matches more than one app, it'll list the matches and ask you to pick one by number. If nothing matches, it'll suggest the closest names it can find.
 
 ## Apps it can't find on its own
 
-`calamitus` works by scanning your Start Menu shortcuts. Apps installed from the Microsoft Store (like WhatsApp) usually don't have one, so `launch` can't find them by itself.
+`launch` finds anything Windows lists in your Start Menu, including apps installed from the Microsoft Store. An app that isn't listed there (a game launcher sitting in some folder, a portable app you unzipped) won't be found by itself.
 
-To fix that, point `launch` at the app yourself. The first time you run `launch`, it creates a file at `%APPDATA%\calamitus\aliases.txt` with instructions inside. Add a line like:
+To fix that, show `launch` where the app is, once, and give it whatever name you like:
 
 ```
-whatsapp=shell:AppsFolder\5319275A.WhatsAppDesktop_cv1g1gvanyjgm!App
+launch --add minecraft
 ```
 
-To find the right target for a Store app, run this in PowerShell and look for your app:
+A normal "choose a file" window opens. Click your way to the app, press Open, and from then on `launch minecraft` opens it. You can also type just `launch --add` and it will ask you for the name first.
 
-```powershell
-Get-StartApps | findstr -i whatsapp
+If you already know where the app is, you can skip the window by putting the location at the end:
+
+```
+launch --add minecraft "C:\Games\Minecraft\MinecraftLauncher.exe"
 ```
 
-You can also point an alias at any `.exe` or `.lnk` path if you'd rather use that instead of the app's Start Menu name.
+Written this way, the location can be a program, a shortcut, or a folder. A name you add always wins over anything else with the same name, and adding the same name again replaces the old location.
+
+**To change or remove a name**, run `launch --edit`. It opens your list (`%APPDATA%\calamitus\aliases.txt`) in a text editor, one `name=location` per line.
 
 ## Frequently asked questions
 
@@ -70,10 +74,10 @@ You can also point an alias at any `.exe` or `.lnk` path if you'd rather use tha
 No. It only runs when you type `launch` — there's nothing sitting in the background.
 
 **Is this safe?**
-Yes. It only looks at the shortcuts already in your Start Menu and opens them the same way Windows Explorer would. It doesn't touch anything else on your system.
+Yes. It only opens things you could already open yourself: the apps in your Start Menu, windowed programs on your PATH (like `notepad`), and any aliases you've added. It never runs command-line tools, and it doesn't touch anything else on your system.
 
 **What if it can't find my app?**
-It searches your Start Menu shortcuts, so if an app doesn't show up when you search the Start Menu either, `launch` won't find it. Some apps (especially ones installed from a store rather than an installer) don't always add a shortcut there — see [Apps it can't find on its own](#apps-it-cant-find-on-its-own) for how to fix that.
+It searches the same list of apps the Start Menu does, so if an app doesn't show up when you search the Start Menu either, `launch` won't find it. See [Apps it can't find on its own](#apps-it-cant-find-on-its-own) for how to add it yourself. An app you installed from the Store a moment ago can take one extra second to be found the first time.
 
 **Do I need to reinstall it every time I restart my PC?**
 No. Once it's installed, it stays installed, just like any other program.
